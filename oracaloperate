@@ -1,0 +1,56 @@
+一、修改为root 直接登录，
+   sudo -i
+   passwd 修改密码是 ooxxoox，一定替换为复杂一点的密码）
+   echo root:xixi2010 |sudo chpasswd root
+   sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config;
+   sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config;
+   service sshd restart
+
+二、依赖和附件删除
+   端口oracle甲骨文云必要操作（来源网络收集，供大家享用）：
+   进入ROOT模式：sudo -i
+
+  安装相关依赖
+  centos系统下
+  yum update -y                                                                                                
+  apt-get update -y && apt-get install curl -y
+
+  ubuntu系统下
+  apt update -y
+  apt-get update -y && apt-get install curl -y
+
+  删除、关闭、打开各自系统的无用附件、防火墙、端口及规则
+
+  A：Centos系统下：
+  删除多余附件
+  systemctl stop oracle-cloud-agent
+  systemctl disable oracle-cloud-agent
+  systemctl stop oracle-cloud-agent-updater
+  systemctl disable oracle-cloud-agent-updater
+
+  停止firewall 并禁止firewall开机启动
+  systemctl stop firewalld.service
+  systemctl disable firewalld.service
+
+  B:Ubuntu系统下：
+  开放所有端口
+  iptables -P INPUT ACCEPT
+  iptables -P FORWARD ACCEPT
+  iptables -P OUTPUT ACCEPT
+  iptables -F
+
+  Ubuntu镜像默认设置了Iptable规则，关闭它
+  apt-get purge netfilter-persistent
+  reboot
+  或者强制删除
+  rm -rf /etc/iptables && reboot
+
+三、防火墙
+［root@localhost ~］# getenforce     
+（1）不重启的头闭　   ［root@localhost ~］# setenforce　0　＃重启电脑后失效
+（2）重启电脑的关闭　［root@localhost ~］# vi /etc/selinux/config
+（3）把SELINUX=enforce改成disabled就可以了，重启电脑，永久生效
+
+
+脚本v2ray
+bash <(curl -sL https://s.hijk.art/xray.sh)
